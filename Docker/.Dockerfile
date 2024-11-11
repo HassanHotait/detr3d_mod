@@ -26,18 +26,19 @@ RUN pip install mmsegmentation==0.18.0
 # Install MMDetection3D
 RUN conda clean --all
 # RUN git clone https://github.com/open-mmlab/mmdetection3d.git /mmdetection3d
-RUN git clone https://github.com/WangYueFt/detr3d.git
-WORKDIR /workspace/detr3d
+# RUN git clone https://github.com/WangYueFt/detr3d.git
+WORKDIR /workspace/detr3d_mod
 # RUN cd detr3d
-RUN git config submodule.mmdetection3d.url https://github.com/open-mmlab/mmdetection3d.git
-RUN git submodule update --init --recursive
+# RUN git config submodule.mmdetection3d.url https://github.com/open-mmlab/mmdetection3d.git
+# RUN git submodule update --init --recursive
+COPY . /workspace/detr3d_mod
 ENV FORCE_CUDA="1"
 
 
 
-COPY checkpoints/detr3d_resnet101.pth /workspace/detr3d/checkpoints/detr3d_resnet101.pth
-COPY checkpoints/detr3d_vovnet_trainval.pth /workspace/detr3d/checkpoints/detr3d_vovnet_trainval.pth
-COPY checkpoints/fcos3d.pth /workspace/detr3d/checkpoints/fcos3d.pth
+COPY checkpoints/detr3d_resnet101.pth /workspace/detr3d_mod/checkpoints/detr3d_resnet101.pth
+COPY checkpoints/detr3d_vovnet_trainval.pth /workspace/detr3d_mod/checkpoints/detr3d_vovnet_trainval.pth
+COPY checkpoints/fcos3d.pth /workspace/detr3d_mod/checkpoints/fcos3d.pth
 
 
 
