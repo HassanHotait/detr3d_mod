@@ -2,6 +2,21 @@
 
 This repo contains the implementations of Object DGCNN (https://arxiv.org/abs/2110.06923) and DETR3D (https://arxiv.org/abs/2110.06922). Our implementations are built on top of MMdetection3D.  
 
+### Environment Setup
+
+#### Local Setup
+
+
+
+#### Docker Setup
+
+docker build -f Docker/.Dockerfile -t detr3d_mod .
+
+docker run --gpus all --shm-size=8g -it -v C:\Users\Hasan\Downloads\data:/workspace/detr3d/data/nuscenes  detr3d
+
+
+#### HPC Setup
+
 ### Prerequisite
 
 1. mmcv (https://github.com/open-mmlab/mmcv)
