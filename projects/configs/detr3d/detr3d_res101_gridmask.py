@@ -114,6 +114,7 @@ model = dict(
             pc_range=point_cloud_range))))
 
 dataset_type = 'NuScenesDataset'
+version = 'mini'
 data_root = 'data/nuscenes/mini/'
 
 file_client_args = dict(backend='disk')
@@ -155,7 +156,7 @@ db_sampler = dict(
         file_client_args=file_client_args))
 
 train_pipeline = [
-    dict(type='LoadMultiViewImageFromFiles', to_float32=True),
+    dict(type='LoadMultiViewImageFromFiles', to_float32=True,dataset=dataset_type,version=version),
     dict(type='PhotoMetricDistortionMultiViewImage'),
     dict(type='LoadAnnotations3D', with_bbox_3d=True, with_label_3d=True, with_attr_label=False),
     dict(type='ObjectRangeFilter', point_cloud_range=point_cloud_range),
@@ -166,7 +167,7 @@ train_pipeline = [
     dict(type='Collect3D', keys=['gt_bboxes_3d', 'gt_labels_3d', 'img'])
 ]
 test_pipeline = [
-    dict(type='LoadMultiViewImageFromFiles', to_float32=True),
+    dict(type='LoadMultiViewImageFromFiles',to_float32=True,dataset=dataset_type,version=version),
     dict(type='NormalizeMultiviewImage', **img_norm_cfg),
     dict(type='PadMultiViewImage', size_divisor=32),
     dict(

@@ -19,9 +19,11 @@ class LoadMultiViewImageFromFiles(object):
         color_type (str): Color type of the file. Defaults to 'unchanged'.
     """
 
-    def __init__(self, to_float32=False, color_type='unchanged'):
+    def __init__(self, dataset,version,to_float32=False, color_type='unchanged'):
         self.to_float32 = to_float32
         self.color_type = color_type
+        self.dataset = dataset
+        self.version = version
 
     def __call__(self, results):
         """Call function to load multi-view image from files.
@@ -41,7 +43,14 @@ class LoadMultiViewImageFromFiles(object):
                 - scale_factor (float): Scale factor.
                 - img_norm_cfg (dict): Normalization configuration of images.
         """
+
         filename = results['img_filename']
+        if self.dataset == 'NuScenesDataset' and self.version == 'v1.0-trainval':
+            # load image from file
+            filename = [file.replace('nuscenes', 'nuscenes/trainval') for file in filename]
+        # elif self.dataset == 'NuScenesDataset' and self.version == 'mini':
+        #     filename = [file.replace('nuscenes', 'nuscenes/mini') for file in filename]
+
         # img is of shape (h, w, c, num_views)
         img = np.stack(
             [mmcv.imread(name, self.color_type) for name in filename], axis=-1)

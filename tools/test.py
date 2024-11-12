@@ -1,8 +1,5 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 import debugpy
-debugpy.listen(("0.0.0.0", 5678))  # Port 5678 is arbitrary; you can set any available port.
-print("Waiting for debugger to attach...")
-debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 import argparse
 import mmcv
 import os
@@ -105,6 +102,10 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    debugpy.listen(("0.0.0.0", 5678))  # Port 5678 is arbitrary; you can set any available port.
+    print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
+    debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 
     assert args.out or args.eval or args.format_only or args.show \
         or args.show_dir, \
