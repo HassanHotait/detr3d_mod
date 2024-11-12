@@ -4,27 +4,77 @@ This repo contains the implementations of Object DGCNN (https://arxiv.org/abs/21
 
 ### Environment Setup
 
+
+
 #### Local Setup
 
 
 
 #### Docker Setup
 
+```bash
 docker build -f Docker/.Dockerfile -t detr3d_mod .
 
-docker run --gpus all --shm-size=8g -it -v C:\Users\Hasan\Downloads\data:/workspace/detr3d/data/  detr3d
+docker run --gpus all --shm-size=8g -it -v path/to/data:/workspace/detr3d/data/  detr3d_mod
+```
 
+You might need the following due to weird git behaviour embedding files weird eol characters.
+
+```bash
 sed -i 's/\r$//' tools/dist_test.sh
-
-For nuscenes: (option betweeb full traival set or mini set)
+```
+For nuscenes: (option betweeb full trainval set or mini set)
+```bash
 tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=nuscenes --debug=True
-
+```
 For kitti:
+
+```bash
 tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=kitti --debug=True
+```
+
 
 
 
 #### HPC Setup
+
+# Dependencies
+
+```bash
+conda create --name detr3d_mod python=3.7
+
+conda activate detr3d_mod 
+
+conda install pytorch==1.10.1 torchvision==0.11.2 torchaudio==0.10.1 cudatoolkit=11.3 -c pytorch -c conda-forge
+
+pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
+
+pip install -r mmdetection3d/requirements.txt
+
+MORE ON LOADING CUDA LIBS + GCC version 9.5+
+
+cd mmdetection3d && pip install --no-cache-dir --ignore-installed -e .
+```
+
+# Get Weights
+
+```bash
+checkpoints/get_ckpts.sh
+```
+# Data Prep
+
+```bash
+gdown ...
+```
+
+```bash
+ln -s /path/to/scratch_dir/data data/
+```
+
+
+
+
+
 
 ### Prerequisite
 
