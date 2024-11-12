@@ -12,7 +12,9 @@ This repo contains the implementations of Object DGCNN (https://arxiv.org/abs/21
 
 docker build -f Docker/.Dockerfile -t detr3d_mod .
 
-docker run --gpus all --shm-size=8g -it -v C:\Users\Hasan\Downloads\data:/workspace/detr3d/data/nuscenes  detr3d
+docker run --gpus all --shm-size=8g -it -v C:\Users\Hasan\Downloads\data:/workspace/detr3d/data/  detr3d
+
+tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox
 
 
 #### HPC Setup

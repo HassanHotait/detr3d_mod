@@ -18,10 +18,10 @@ RUN apt-get update && apt-get install -y ffmpeg libsm6 libxext6 git ninja-build 
 
 # # Install MMCV, MMDetection and MMSegmentation
 # RUN pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu101/torch1.6.0/index.html
-RUN pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
+# 
 
-RUN pip install mmdet==2.17.0
-RUN pip install mmsegmentation==0.18.0
+# RUN pip install mmdet==2.17.0
+# RUN pip install mmsegmentation==0.18.0
 
 # Install MMDetection3D
 RUN conda clean --all
@@ -34,15 +34,16 @@ WORKDIR /workspace/detr3d_mod
 COPY . /workspace/detr3d_mod
 ENV FORCE_CUDA="1"
 
-
-
-COPY checkpoints/detr3d_resnet101.pth /workspace/detr3d_mod/checkpoints/detr3d_resnet101.pth
-COPY checkpoints/detr3d_vovnet_trainval.pth /workspace/detr3d_mod/checkpoints/detr3d_vovnet_trainval.pth
-COPY checkpoints/fcos3d.pth /workspace/detr3d_mod/checkpoints/fcos3d.pth
+# RUN pip install gdown 
+# RUN /workspace/detr3d_mod/checkpoints/get_ckpts.sh
 
 
 
 
+RUN pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
+RUN pip install -r mmdetection3d/requirements.txt
+RUN cd mmdetection3d && pip install --no-cache-dir --ignore-installed -e .
+# RUN python mmdetection3d/setup.py install
 # RUN pip install --no-cache-dir -e .
 # RUN pip install --no-cache-dir --ignore-installed -e .
 
