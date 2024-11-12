@@ -43,6 +43,7 @@ ENV FORCE_CUDA="1"
 RUN pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/torch1.10.0/index.html
 RUN pip install -r mmdetection3d/requirements.txt
 RUN cd mmdetection3d && pip install --no-cache-dir --ignore-installed -e .
+RUN checkpoints/get_ckpts.sh
 # RUN python mmdetection3d/setup.py install
 # RUN pip install --no-cache-dir -e .
 # RUN pip install --no-cache-dir --ignore-installed -e .

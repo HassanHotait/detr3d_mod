@@ -14,6 +14,8 @@ docker build -f Docker/.Dockerfile -t detr3d_mod .
 
 docker run --gpus all --shm-size=8g -it -v C:\Users\Hasan\Downloads\data:/workspace/detr3d/data/  detr3d
 
+sed -i 's/\r$//' tools/dist_test.sh
+
 tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox
 
 
