@@ -16,7 +16,12 @@ docker run --gpus all --shm-size=8g -it -v C:\Users\Hasan\Downloads\data:/worksp
 
 sed -i 's/\r$//' tools/dist_test.sh
 
-tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox
+For nuscenes: (option betweeb full traival set or mini set)
+tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=nuscenes --debug=True
+
+For kitti:
+tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=kitti --debug=True
+
 
 
 #### HPC Setup

@@ -13,6 +13,7 @@ from mmcv.runner import (get_dist_info, init_dist, load_checkpoint,
 
 from mmdet3d.apis import single_gpu_test
 from mmdet3d.datasets import build_dataloader, build_dataset
+from mmdet3d.datasets.kitti_dataset_stereo import KittiStereoDataset
 from mmdet3d.models import build_model
 from mmdet.apis import multi_gpu_test, set_random_seed
 from mmdet.datasets import replace_ImageToTensor
@@ -86,6 +87,8 @@ def parse_args():
         default='none',
         help='job launcher')
     parser.add_argument('--local_rank', type=int, default=0)
+    parser.add_argument('--dataset', help='dataset name (kitti, nuscenes)')
+    parser.add_argument('--debug',help='triggers debugger',default=False)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -103,9 +106,10 @@ def parse_args():
 def main():
     args = parse_args()
 
-    debugpy.listen(("0.0.0.0", 5678))  # Port 5678 is arbitrary; you can set any available port.
-    print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
-    debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
+    if args.debug:
+        debugpy.listen(("0.0.0.0", 5678))  # Port 5678 is arbitrary; you can set any available port.
+        print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
+        debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 
     assert args.out or args.eval or args.format_only or args.show \
         or args.show_dir, \
@@ -186,7 +190,19 @@ def main():
         set_random_seed(args.seed, deterministic=args.deterministic)
 
     # build the dataloader
-    dataset = build_dataset(cfg.data.test)
+    if args.dataset == 'kitti':
+        dataset = KittiStereoDataset(data_root=cfg.data_root,
+                           ann_file=cfg.data.val.ann_file,
+                           split='training',
+                           pipeline=cfg.eval_pipeline,
+                           classes=cfg.class_names,
+                           modality=cfg.input_modality,
+                           test_mode=True,
+                           box_type_3d='LiDAR')
+    elif args.dataset == 'nuscenes':
+        dataset = build_dataset(cfg.data.test)
+    else:
+        raise NotImplementedError(f'Dataset {args.dataset} not implemented')
     data_loader = build_dataloader(
         dataset,
         samples_per_gpu=samples_per_gpu,

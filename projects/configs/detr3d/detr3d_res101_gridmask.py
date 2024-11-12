@@ -58,6 +58,7 @@ model = dict(
         as_two_stage=False,
         transformer=dict(
             type='Detr3DTransformer',
+            num_cams = 6,
             decoder=dict(
                 type='Detr3DTransformerDecoder',
                 num_layers=6,
@@ -74,6 +75,7 @@ model = dict(
                             type='Detr3DCrossAtten',
                             pc_range=point_cloud_range,
                             num_points=1,
+                            num_cams = 6,
                             embed_dims=256)
                     ],
                     feedforward_channels=512,

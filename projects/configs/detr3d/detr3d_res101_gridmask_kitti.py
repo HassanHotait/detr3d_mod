@@ -59,12 +59,14 @@ model = dict(
         as_two_stage=False,
         transformer=dict(
             type='Detr3DTransformer',
+            num_cams = 2,
             decoder=dict(
                 type='Detr3DTransformerDecoder',
                 num_layers=6,
                 return_intermediate=True,
                 transformerlayers=dict(
                     type='DetrTransformerDecoderLayer',
+                    num_cams = 2,
                     attn_cfgs=[
                         dict(
                             type='MultiheadAttention',
@@ -74,6 +76,7 @@ model = dict(
                         dict(
                             type='Detr3DCrossAtten',
                             pc_range=point_cloud_range,
+                            num_cams = 2,
                             num_points=1,
                             embed_dims=256)
                     ],
@@ -116,7 +119,8 @@ model = dict(
 
 # dataset settings
 dataset_type = 'KittiDataset'
-data_root = 'data/nuscenes/kitti/'
+version = None
+data_root = 'data/kitti/'
 # class_names = ['Pedestrian', 'Cyclist', 'Car']
 # point_cloud_range = [0, -40, -3, 70.4, 40, 1]
 # input_modality = dict(use_lidar=True, use_camera=False)
@@ -232,7 +236,7 @@ test_pipeline = [
 # ]
 
 eval_pipeline = [
-    dict(type='LoadMultiViewImageFromFiles', to_float32=True),
+    dict(type='LoadMultiViewImageFromFiles', dataset=dataset_type,version=version,to_float32=True),
     dict(type='NormalizeMultiviewImage', **img_norm_cfg),
     dict(type='PadMultiViewImage', size_divisor=32),
     dict(
