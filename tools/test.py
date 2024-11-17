@@ -107,7 +107,7 @@ def main():
     args = parse_args()
 
     if args.debug:
-        debugpy.listen(("0.0.0.0", 5678))  # Port 5678 is arbitrary; you can set any available port.
+        debugpy.listen(("127.0.0.1", 5678))  # Port 5678 is arbitrary; you can set any available port.
         print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
         debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 

@@ -113,6 +113,7 @@ class KittiDataset(Custom3DDataset):
         """
         info = self.data_infos[index]
         sample_idx = info['image']['image_idx']
+        print(info['image'].keys())
         img_filename = os.path.join(self.data_root,
                                     info['image']['image_path'])
 

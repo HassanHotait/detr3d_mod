@@ -7,7 +7,7 @@ class_names = [
     'motorcycle', 'pedestrian', 'traffic_cone', 'barrier'
 ]
 dataset_type = 'NuScenesDataset'
-data_root = 'data/nuscenes/mini/'
+data_root = 'data/nuscenes/trainval/'
 # Input modality for nuScenes dataset, this is consistent with the submission
 # format which requires the information in input_modality.
 input_modality = dict(

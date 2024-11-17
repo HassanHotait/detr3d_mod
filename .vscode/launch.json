@@ -6,13 +6,13 @@
             "type": "python",
             "request": "attach",
             "connect": {
-                "host": "localhost",
-                "port": 5678
+                "host": "localhost", // Use the same IP as debugpy.listen
+                "port": 5670
             },
             "pathMappings": [
                 {
                     "localRoot": "${workspaceFolder}",
-                    "remoteRoot": "/workspace/detr3d_mod" // adjust this if necessary
+                    "remoteRoot": "${workspaceFolder}" // adjust this if necessary
                 }
             ],
             "justMyCode": false

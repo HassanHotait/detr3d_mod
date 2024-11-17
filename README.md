@@ -33,6 +33,10 @@ For kitti:
 tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=kitti --debug=True
 ```
 
+Training:
+
+tools/dist_train.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py 8
+
 
 
 
@@ -51,9 +55,19 @@ pip install mmcv-full==1.4.0 -f https://download.openmmlab.com/mmcv/dist/cu113/t
 
 pip install -r mmdetection3d/requirements.txt
 
-MORE ON LOADING CUDA LIBS + GCC version 9.5+
+module load cuda/11.3   
+
+module load cudnn/v8.2.0.53-prod-cuda-11.3  
+
+sxm2sh
+
+module load gcc/9.5.0-binutils-2.38  # This Version to build
+
 
 cd mmdetection3d && pip install --no-cache-dir --ignore-installed -e .
+
+# Maybe 
+module load gcc/14.2.0-binutils-2.43  # this version to run
 ```
 
 # Get Weights

@@ -3,3 +3,5 @@
 -r requirements/runtime.txt
 -r requirements/tests.txt
 -r requirements/docs.txt
+# setuptools==59.5.0
+# protobuf==3.8.0

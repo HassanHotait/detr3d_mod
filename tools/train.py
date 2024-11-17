@@ -1,5 +1,6 @@
 # Copyright (c) OpenMMLab. All rights reserved.
 from __future__ import division
+import debugpy
 
 import argparse
 import copy
@@ -76,6 +77,7 @@ def parse_args():
         '--autoscale-lr',
         action='store_true',
         help='automatically scale lr with the number of gpus')
+    parser.add_argument('--debug',help='triggers debugger',default=False)
     args = parser.parse_args()
     if 'LOCAL_RANK' not in os.environ:
         os.environ['LOCAL_RANK'] = str(args.local_rank)
@@ -93,6 +95,11 @@ def parse_args():
 
 def main():
     args = parse_args()
+
+    if args.debug:
+        debugpy.listen(("localhost", 5670))  # Port 5678 is arbitrary; you can set any available port.
+        print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
+        debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 
     cfg = Config.fromfile(args.config)
     if args.cfg_options is not None:

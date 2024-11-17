@@ -161,35 +161,47 @@ file_client_args = dict(backend='disk')
 # file_client_args = dict(
 #     backend='petrel', path_mapping=dict(data='s3://kitti_data/'))
 
+# train_pipeline = [
+#     dict(
+#         type='LoadPointsFromFile',
+#         coord_type='LIDAR',
+#         load_dim=4,
+#         use_dim=4,
+#         file_client_args=file_client_args),
+#     dict(
+#         type='LoadAnnotations3D',
+#         with_bbox_3d=True,
+#         with_label_3d=True,
+#         file_client_args=file_client_args),
+#     dict(type='ObjectSample', db_sampler=db_sampler),
+#     dict(
+#         type='ObjectNoise',
+#         num_try=100,
+#         translation_std=[1.0, 1.0, 0.5],
+#         global_rot_range=[0.0, 0.0],
+#         rot_range=[-0.78539816, 0.78539816]),
+#     dict(type='RandomFlip3D', flip_ratio_bev_horizontal=0.5),
+#     dict(
+#         type='GlobalRotScaleTrans',
+#         rot_range=[-0.78539816, 0.78539816],
+#         scale_ratio_range=[0.95, 1.05]),
+#     dict(type='PointsRangeFilter', point_cloud_range=point_cloud_range),
+#     dict(type='ObjectRangeFilter', point_cloud_range=point_cloud_range),
+#     dict(type='PointShuffle'),
+#     dict(type='DefaultFormatBundle3D', class_names=class_names),
+#     dict(type='Collect3D', keys=['points', 'gt_bboxes_3d', 'gt_labels_3d'])
+# ]
+
 train_pipeline = [
-    dict(
-        type='LoadPointsFromFile',
-        coord_type='LIDAR',
-        load_dim=4,
-        use_dim=4,
-        file_client_args=file_client_args),
-    dict(
-        type='LoadAnnotations3D',
-        with_bbox_3d=True,
-        with_label_3d=True,
-        file_client_args=file_client_args),
-    dict(type='ObjectSample', db_sampler=db_sampler),
-    dict(
-        type='ObjectNoise',
-        num_try=100,
-        translation_std=[1.0, 1.0, 0.5],
-        global_rot_range=[0.0, 0.0],
-        rot_range=[-0.78539816, 0.78539816]),
-    dict(type='RandomFlip3D', flip_ratio_bev_horizontal=0.5),
-    dict(
-        type='GlobalRotScaleTrans',
-        rot_range=[-0.78539816, 0.78539816],
-        scale_ratio_range=[0.95, 1.05]),
-    dict(type='PointsRangeFilter', point_cloud_range=point_cloud_range),
+    dict(type='LoadMultiViewImageFromFiles', to_float32=True,dataset=dataset_type,version=version),
+    dict(type='PhotoMetricDistortionMultiViewImage'),
+    dict(type='LoadAnnotations3D', with_bbox_3d=True, with_label_3d=True, with_attr_label=False),
     dict(type='ObjectRangeFilter', point_cloud_range=point_cloud_range),
-    dict(type='PointShuffle'),
+    dict(type='ObjectNameFilter', classes=class_names),
+    dict(type='NormalizeMultiviewImage', **img_norm_cfg),
+    dict(type='PadMultiViewImage', size_divisor=32),
     dict(type='DefaultFormatBundle3D', class_names=class_names),
-    dict(type='Collect3D', keys=['points', 'gt_bboxes_3d', 'gt_labels_3d'])
+    dict(type='Collect3D', keys=['gt_bboxes_3d', 'gt_labels_3d', 'img'])
 ]
 test_pipeline = [
     dict(
@@ -296,3 +308,24 @@ data = dict(
         box_type_3d='LiDAR'))
 
 evaluation = dict(interval=1, pipeline=eval_pipeline)
+optimizer = dict(
+    type='AdamW', 
+    lr=2e-4,
+    paramwise_cfg=dict(
+        custom_keys={
+            'img_backbone': dict(lr_mult=0.1),
+        }),
+    weight_decay=0.01)
+optimizer_config = dict(grad_clip=dict(max_norm=35, norm_type=2))
+# learning policy
+lr_config = dict(
+    policy='CosineAnnealing',
+    warmup='linear',
+    warmup_iters=500,
+    warmup_ratio=1.0 / 3,
+    min_lr_ratio=1e-3)
+total_epochs = 1
+evaluation = dict(interval=2, pipeline=test_pipeline)
+
+runner = dict(type='EpochBasedRunner', max_epochs=total_epochs)
+load_from='checkpoints/fcos3d.pth'
