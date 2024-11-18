@@ -198,7 +198,7 @@ data = dict(
         classes=class_names,
         modality=input_modality,
         test_mode=False,
-        use_valid_flag=True,
+        use_valid_flag=False,
         # we use box_type_3d='LiDAR' in kitti and nuscenes dataset
         # and box_type_3d='Depth' in sunrgbd and scannet dataset.
         box_type_3d='LiDAR'),
@@ -225,4 +225,4 @@ total_epochs = 24
 evaluation = dict(interval=2, pipeline=test_pipeline)
 
 runner = dict(type='EpochBasedRunner', max_epochs=total_epochs)
-load_from='ckpts/fcos3d.pth'
+load_from='checkpoints/fcos3d.pth'

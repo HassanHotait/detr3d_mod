@@ -22,6 +22,8 @@ from mmdet3d.utils import collect_env, get_root_logger
 from mmdet.apis import set_random_seed
 from mmseg import __version__ as mmseg_version
 
+from mmdet3d.datasets.kitti_dataset_stereo import KittiStereoDataset
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Train a detector')
@@ -97,7 +99,7 @@ def main():
     args = parse_args()
 
     if args.debug:
-        debugpy.listen(("localhost", 5670))  # Port 5678 is arbitrary; you can set any available port.
+        debugpy.listen(("10.66.20.9", 5670))  # Port 5678 is arbitrary; you can set any available port.
         print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
         debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 
@@ -215,7 +217,20 @@ def main():
     model.init_weights()
 
     logger.info(f'Model:\n{model}')
-    datasets = [build_dataset(cfg.data.train)]
+    # datasets = [build_dataset(cfg.data.train)]
+    # if args.dataset == 'kitti':
+    datasets = [KittiStereoDataset(data_root=cfg.data_root,
+                        ann_file=cfg.data.train.dataset.ann_file,
+                        split='training',
+                        pipeline=cfg.train_pipeline,
+                        classes=cfg.class_names,
+                        modality=cfg.input_modality,
+                        test_mode=False,
+                        box_type_3d='LiDAR')]
+    # elif args.dataset == 'nuscenes':
+    #     datasets = [build_dataset(cfg.data.train)]
+    # else:
+    #     raise NotImplementedError(f'Dataset {args.dataset} not implemented')
     if len(cfg.workflow) == 2:
         val_dataset = copy.deepcopy(cfg.data.val)
         # in case we use a dataset wrapper

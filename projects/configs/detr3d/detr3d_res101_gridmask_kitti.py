@@ -118,7 +118,7 @@ model = dict(
             pc_range=point_cloud_range))))
 
 # dataset settings
-dataset_type = 'KittiDataset'
+dataset_type = 'KittiStereoDataset'
 version = None
 data_root = 'data/kitti/'
 # class_names = ['Pedestrian', 'Cyclist', 'Car']

@@ -37,6 +37,8 @@ Training:
 
 tools/dist_train.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py 8
 
+bash tools/dist_train.sh projects/configs/detr3d/detr3d_res101_gridmask.py 1 --debug True
+
 
 
 
