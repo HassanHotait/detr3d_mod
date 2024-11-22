@@ -1,5 +1,5 @@
 _base_ = [
-    '../../../mmdetection3d/configs/_base_/datasets/kitti-3d-3class.py',
+    # '../../../mmdetection3d/configs/_base_/datasets/kitti-3d-3class.py',
     '../../../mmdetection3d/configs/_base_/default_runtime.py'
 ]
 
@@ -14,10 +14,11 @@ voxel_size = [0.2, 0.2, 8]
 img_norm_cfg = dict(
     mean=[103.530, 116.280, 123.675], std=[1.0, 1.0, 1.0], to_rgb=False)
 # # For nuScenes we usually do 10-class detection
-class_names = [
-    'Car', 'truck', 'construction_vehicle', 'bus', 'trailer', 'barrier',
-    'motorcycle', 'Cyclist', 'Pedestrian', 'traffic_cone'
-]
+# class_names = [
+#     'Car', 'truck', 'construction_vehicle', 'bus', 'trailer', 'barrier',
+#     'motorcycle', 'Cyclist', 'Pedestrian', 'traffic_cone'
+# ]
+class_names = ['Pedestrian', 'Cyclist', 'Car']
 point_cloud_range = [0, -40, -3, 70.4, 40, 1]
 
 input_modality = dict(
@@ -52,7 +53,7 @@ model = dict(
     pts_bbox_head=dict(
         type='Detr3DHead',
         num_query=900,
-        num_classes=10,
+        num_classes=len(class_names),
         in_channels=256,
         sync_cls_avg_factor=True,
         with_box_refine=True,
@@ -132,27 +133,13 @@ db_sampler = dict(
         filter_by_difficulty=[-1],
         filter_by_min_points=dict(
             Car=5,
-            truck=5,
-            bus=5,
-            trailer=5,
-            construction_vehicle=5,
-            traffic_cone=5,
-            barrier=5,
-            motorcycle=5,
             Cyclist=5,
             Pedestrian=5)),
     classes=class_names,
     sample_groups=dict(
         Car=2,
-        truck=3,
-        construction_vehicle=7,
-        bus=4,
-        trailer=6,
-        barrier=2,
-        motorcycle=6,
         Cyclist=6,
-        Pedestrian=2,
-        traffic_cone=2))
+        Pedestrian=2))
 
 file_client_args = dict(backend='disk')
 # Uncomment the following if use ceph or other file clients.
@@ -204,12 +191,9 @@ train_pipeline = [
     dict(type='Collect3D', keys=['gt_bboxes_3d', 'gt_labels_3d', 'img'])
 ]
 test_pipeline = [
-    dict(
-        type='LoadPointsFromFile',
-        coord_type='LIDAR',
-        load_dim=4,
-        use_dim=4,
-        file_client_args=file_client_args),
+    dict(type='LoadMultiViewImageFromFiles',to_float32=True,dataset=dataset_type,version=version),
+    dict(type='NormalizeMultiviewImage', **img_norm_cfg),
+    dict(type='PadMultiViewImage', size_divisor=32),
     dict(
         type='MultiScaleFlipAug3D',
         img_scale=(1333, 800),
@@ -217,18 +201,10 @@ test_pipeline = [
         flip=False,
         transforms=[
             dict(
-                type='GlobalRotScaleTrans',
-                rot_range=[0, 0],
-                scale_ratio_range=[1., 1.],
-                translation_std=[0, 0, 0]),
-            dict(type='RandomFlip3D'),
-            dict(
-                type='PointsRangeFilter', point_cloud_range=point_cloud_range),
-            dict(
                 type='DefaultFormatBundle3D',
                 class_names=class_names,
                 with_label=False),
-            dict(type='Collect3D',  keys=['points'])
+            dict(type='Collect3D', keys=['img'])
         ])
 ]
 # construct a pipeline for data and gt loading in show function
@@ -283,7 +259,7 @@ data = dict(
             test_mode=False,
             # we use box_type_3d='LiDAR' in kitti and nuscenes dataset
             # and box_type_3d='Depth' in sunrgbd and scannet dataset.
-            box_type_3d='LiDAR')),
+            box_type_3d='Camera')),
     val=dict(
         type=dataset_type,
         data_root=data_root,
@@ -294,7 +270,7 @@ data = dict(
         modality=input_modality,
         classes=class_names,
         test_mode=True,
-        box_type_3d='LiDAR'),
+        box_type_3d='Camera'),
     test=dict(
         type=dataset_type,
         data_root=data_root,
@@ -305,7 +281,7 @@ data = dict(
         modality=input_modality,
         classes=class_names,
         test_mode=True,
-        box_type_3d='LiDAR'))
+        box_type_3d='Camera'))
 
 evaluation = dict(interval=1, pipeline=eval_pipeline)
 optimizer = dict(

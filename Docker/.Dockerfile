@@ -3,6 +3,7 @@ ARG CUDA="11.3"       # Compatible with RTX 3080
 ARG CUDNN="8"
 
 FROM pytorch/pytorch:${PYTORCH}-cuda${CUDA}-cudnn${CUDNN}-devel
+#FROM nvcr.io/nvidia/pytorch:21.12-py3
 
 
 ENV TORCH_CUDA_ARCH_LIST="6.0 6.1 7.0+PTX"

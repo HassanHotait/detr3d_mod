@@ -60,7 +60,7 @@ class KittiStereoDataset(Custom3DDataset):
                  pipeline=None,
                  classes=None,
                  modality=None,
-                 box_type_3d='LiDAR',
+                 box_type_3d='Camera',
                  filter_empty_gt=True,
                  test_mode=False,
                  pcd_limit_range=[0, -40, -3, 70.4, 40, 0.0]):
@@ -137,7 +137,7 @@ class KittiStereoDataset(Custom3DDataset):
 
         return input_dict
 
-    def get_ann_info(self, index):
+    def get_ann_info(self, index,velocity=False):
         """Get annotation info according to the given index.
 
         Args:
@@ -171,6 +171,9 @@ class KittiStereoDataset(Custom3DDataset):
         # convert gt_bboxes_3d to velodyne coordinates
         gt_bboxes_3d = CameraInstance3DBoxes(gt_bboxes_3d).convert_to(
             self.box_mode_3d, np.linalg.inv(rect @ Trv2c))
+        # if velocity:
+        #     gt_bboxes_3d = np.concatenate([gt_bboxes_3d,annos['velocity']],axis=1)
+        
         gt_bboxes = annos['bbox']
 
         selected = self.drop_arrays_by_name(gt_names, ['DontCare'])

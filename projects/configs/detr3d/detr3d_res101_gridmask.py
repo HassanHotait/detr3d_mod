@@ -116,8 +116,8 @@ model = dict(
             pc_range=point_cloud_range))))
 
 dataset_type = 'NuScenesDataset'
-version = 'v1.0-trainval'
-data_root = 'data/nuscenes/trainval/'
+version = 'mini'
+data_root = 'data/nuscenes/mini/'
 
 file_client_args = dict(backend='disk')
 

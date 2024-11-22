@@ -198,6 +198,11 @@ class Detr3DHead(DETRHead):
                                              gt_labels, gt_bboxes_ignore)
         sampling_result = self.sampler.sample(assign_result, bbox_pred,
                                               gt_bboxes)
+        # zeros = torch.zeros_like(sampling_result.pos_gt_bboxes[..., :2])  # Create a tensor with 2 columns of zeros
+
+        # # Concatenate the zeros tensor with sampling_result along the last dimension (dim=2)
+        # sampling_result.pos_gt_bboxes = torch.cat((sampling_result.pos_gt_bboxes, zeros), dim=-1)
+        
         pos_inds = sampling_result.pos_inds
         neg_inds = sampling_result.neg_inds
 
@@ -209,7 +214,11 @@ class Detr3DHead(DETRHead):
         label_weights = gt_bboxes.new_ones(num_bboxes)
 
         # bbox targets
-        bbox_targets = torch.zeros_like(bbox_pred)[..., :9]
+        bbox_targets = torch.zeros_like(bbox_pred)[..., :7]
+        # zeros = torch.zeros_like(bbox_pred[..., :2])  # Create a tensor with 2 columns of zeros
+        # # Concatenate the zeros tensor with bbox_pred along the last dimension (dim=2)
+        # bbox_targets = torch.cat((bbox_pred, zeros), dim=-1)
+
         bbox_weights = torch.zeros_like(bbox_pred)
         bbox_weights[pos_inds] = 1.0
 

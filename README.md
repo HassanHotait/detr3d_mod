@@ -30,14 +30,15 @@ tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints
 For kitti:
 
 ```bash
-tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=kitti --debug=True
+tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101_kitti.pth 1 --eval=bbox --dataset=kitti --debug=True
 ```
 
 Training:
 
-tools/dist_train.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py 8
+bash tools/dist_train.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py 1 --debug True
 
 bash tools/dist_train.sh projects/configs/detr3d/detr3d_res101_gridmask.py 1 --debug True
+
 
 
 
