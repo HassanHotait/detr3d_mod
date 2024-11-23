@@ -58,6 +58,7 @@ model = dict(
         sync_cls_avg_factor=True,
         with_box_refine=True,
         as_two_stage=False,
+        code_weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
         transformer=dict(
             type='Detr3DTransformer',
             num_cams = 2,
@@ -91,7 +92,7 @@ model = dict(
             pc_range=point_cloud_range,
             max_num=300,
             voxel_size=voxel_size,
-            num_classes=10), 
+            num_classes=len(class_names)), 
         positional_encoding=dict(
             type='SinePositionalEncoding',
             num_feats=128,
@@ -196,7 +197,7 @@ test_pipeline = [
     dict(type='PadMultiViewImage', size_divisor=32),
     dict(
         type='MultiScaleFlipAug3D',
-        img_scale=(1333, 800),
+        img_scale=(1242, 375),
         pts_scale_ratio=1,
         flip=False,
         transforms=[
@@ -229,7 +230,7 @@ eval_pipeline = [
     dict(type='PadMultiViewImage', size_divisor=32),
     dict(
         type='MultiScaleFlipAug3D',
-        img_scale=(1333, 800),
+        img_scale=(1242, 375),
         pts_scale_ratio=1,
         flip=False,
         transforms=[
@@ -242,7 +243,7 @@ eval_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=6,
+    samples_per_gpu=2,
     workers_per_gpu=4,
     train=dict(
         type='RepeatDataset',

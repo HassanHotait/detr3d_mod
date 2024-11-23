@@ -1,3 +1,4 @@
+import code
 import copy
 
 import torch
@@ -41,11 +42,12 @@ class Detr3DHead(DETRHead):
         if 'code_size' in kwargs:
             self.code_size = kwargs['code_size']
         else:
-            self.code_size = 10
+            self.code_size = len(code_weights)
         if code_weights is not None:
             self.code_weights = code_weights
         else:
-            self.code_weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 0.2]
+            # self.code_weights = [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.2, 0.2]
+            self.code_weights = code_weights
         
         self.bbox_coder = build_bbox_coder(bbox_coder)
         self.pc_range = self.bbox_coder.pc_range
@@ -214,7 +216,7 @@ class Detr3DHead(DETRHead):
         label_weights = gt_bboxes.new_ones(num_bboxes)
 
         # bbox targets
-        bbox_targets = torch.zeros_like(bbox_pred)[..., :7]
+        bbox_targets = torch.zeros_like(bbox_pred)[..., :9]
         # zeros = torch.zeros_like(bbox_pred[..., :2])  # Create a tensor with 2 columns of zeros
         # # Concatenate the zeros tensor with bbox_pred along the last dimension (dim=2)
         # bbox_targets = torch.cat((bbox_pred, zeros), dim=-1)
