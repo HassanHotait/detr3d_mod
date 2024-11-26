@@ -99,7 +99,7 @@ def main():
     args = parse_args()
 
     if args.debug:
-        debugpy.listen(("localhost", 5670))  # Port 5678 is arbitrary; you can set any available port.
+        debugpy.listen(("10.66.20.9", 5670))  # Port 5678 is arbitrary; you can set any available port.
         print("Waiting for debugger to attach - Go to Run and Debug and press "+"▶️  "+" on 'Attach to Remote' configuration")
         debugpy.wait_for_client()  # This line will pause execution until you attach the debugger.
 
@@ -145,7 +145,7 @@ def main():
         cfg.work_dir = args.work_dir
     elif cfg.get('work_dir', None) is None:
         # use config filename as default work_dir if cfg.work_dir is None
-        cfg.work_dir = osp.join('./work_dirs',
+        cfg.work_dir = osp.join('./data',
                                 osp.splitext(osp.basename(args.config))[0])
     if args.resume_from is not None:
         cfg.resume_from = args.resume_from

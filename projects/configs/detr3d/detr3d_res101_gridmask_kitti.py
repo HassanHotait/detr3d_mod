@@ -243,11 +243,12 @@ eval_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=2,
-    workers_per_gpu=4,
+    samples_per_gpu=6,
+    workers_per_gpu=8,
+    type ='idk',
     train=dict(
         type='RepeatDataset',
-        times=2,
+        times=1,
         dataset=dict(
             type=dataset_type,
             data_root=data_root,
@@ -284,6 +285,8 @@ data = dict(
         test_mode=True,
         box_type_3d='Camera'))
 
+
+
 evaluation = dict(interval=1, pipeline=eval_pipeline)
 optimizer = dict(
     type='AdamW', 
@@ -301,8 +304,8 @@ lr_config = dict(
     warmup_iters=500,
     warmup_ratio=1.0 / 3,
     min_lr_ratio=1e-3)
-total_epochs = 1
+total_epochs = 3
 evaluation = dict(interval=2, pipeline=test_pipeline)
 
 runner = dict(type='EpochBasedRunner', max_epochs=total_epochs)
-load_from='checkpoints/fcos3d.pth'
+load_from='data/fcos3d.pth'

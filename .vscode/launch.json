@@ -6,7 +6,7 @@
             "type": "python",
             "request": "attach",
             "connect": {
-                "host": "localhost", // Use the same IP as debugpy.listen
+                "host": "10.66.20.9", // Use the same IP as debugpy.listen
                 "port": 5670
             },
             "pathMappings": [

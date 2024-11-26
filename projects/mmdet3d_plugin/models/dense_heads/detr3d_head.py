@@ -216,7 +216,7 @@ class Detr3DHead(DETRHead):
         label_weights = gt_bboxes.new_ones(num_bboxes)
 
         # bbox targets
-        bbox_targets = torch.zeros_like(bbox_pred)[..., :9]
+        bbox_targets = torch.zeros_like(bbox_pred)[..., :7]
         # zeros = torch.zeros_like(bbox_pred[..., :2])  # Create a tensor with 2 columns of zeros
         # # Concatenate the zeros tensor with bbox_pred along the last dimension (dim=2)
         # bbox_targets = torch.cat((bbox_pred, zeros), dim=-1)

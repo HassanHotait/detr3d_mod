@@ -226,4 +226,4 @@ total_epochs = 24
 evaluation = dict(interval=2, pipeline=test_pipeline)
 
 runner = dict(type='EpochBasedRunner', max_epochs=total_epochs)
-load_from='checkpoints/fcos3d.pth'
+load_from='data/fcos3d.pth'
