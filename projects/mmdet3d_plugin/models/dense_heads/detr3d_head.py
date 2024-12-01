@@ -449,7 +449,7 @@ class Detr3DHead(DETRHead):
             preds = preds_dicts[i]
             bboxes = preds['bboxes']
             bboxes[:, 2] = bboxes[:, 2] - bboxes[:, 5] * 0.5
-            bboxes = img_metas[i]['box_type_3d'](bboxes, 9)
+            bboxes = img_metas[i]['box_type_3d'](bboxes, 7)
             scores = preds['scores']
             labels = preds['labels']
             ret_list.append([bboxes, scores, labels])

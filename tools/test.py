@@ -190,19 +190,19 @@ def main():
         set_random_seed(args.seed, deterministic=args.deterministic)
 
     # build the dataloader
-    if args.dataset == 'kitti':
-        dataset = KittiStereoDataset(data_root=cfg.data_root,
-                           ann_file=cfg.data.val.ann_file,
-                           split='training',
-                           pipeline=cfg.eval_pipeline,
-                           classes=cfg.class_names,
-                           modality=cfg.input_modality,
-                           test_mode=True,
-                           box_type_3d='LiDAR')
-    elif args.dataset == 'nuscenes':
-        dataset = build_dataset(cfg.data.test)
-    else:
-        raise NotImplementedError(f'Dataset {args.dataset} not implemented')
+    # if args.dataset == 'kitti':
+    #     dataset = KittiStereoDataset(data_root=cfg.data_root,
+    #                        ann_file=cfg.data.val.ann_file,
+    #                        split='training',
+    #                        pipeline=cfg.eval_pipeline,
+    #                        classes=cfg.class_names,
+    #                        modality=cfg.input_modality,
+    #                        test_mode=True,
+    #                        box_type_3d='LiDAR')
+    # elif args.dataset == 'nuscenes':
+    dataset = build_dataset(cfg.data.test)
+    # else:
+    #     raise NotImplementedError(f'Dataset {args.dataset} not implemented')
     data_loader = build_dataloader(
         dataset,
         samples_per_gpu=samples_per_gpu,

@@ -243,8 +243,8 @@ eval_pipeline = [
 ]
 
 data = dict(
-    samples_per_gpu=6,
-    workers_per_gpu=8,
+    samples_per_gpu=12, # 12 for 32GB 
+    workers_per_gpu=4,
     type ='idk',
     train=dict(
         type='RepeatDataset',
@@ -259,8 +259,6 @@ data = dict(
             modality=input_modality,
             classes=class_names,
             test_mode=False,
-            # we use box_type_3d='LiDAR' in kitti and nuscenes dataset
-            # and box_type_3d='Depth' in sunrgbd and scannet dataset.
             box_type_3d='Camera')),
     val=dict(
         type=dataset_type,

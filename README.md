@@ -30,7 +30,9 @@ tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask.py checkpoints
 For kitti:
 
 ```bash
-tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101_kitti.pth 1 --eval=bbox --dataset=kitti --debug=True
+tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py checkpoints/detr3d_resnet101.pth 1 --eval=bbox --dataset=kitti --debug=True
+
+bash tools/dist_test.sh projects/configs/detr3d/detr3d_res101_gridmask_kitti.py data/epoch_1.pth 1 --eval=bbox --dataset=kitti 
 ```
 
 Training:
@@ -64,9 +66,9 @@ module load cudnn/v8.2.0.53-prod-cuda-11.3
 
 module load tensorrt/v8.0.1.6-cuda-11.3    
 
-sxm2sh
-
 module load gcc/9.5.0-binutils-2.38  # This Version to build
+
+sxm2sh
 
 
 cd mmdetection3d && pip install --no-cache-dir --ignore-installed -e .
